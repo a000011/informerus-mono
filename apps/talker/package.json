@@ -1,0 +1,37 @@
+{
+  "name": "@informerus/talker",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon --exec node --import @swc-node/register/esm-register ./src/index.ts",
+    "start": "node --import @swc-node/register/esm-register ./src/index.ts",
+    "clean": "rm -rf .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "prettier": "@informerus/prettier-config",
+  "dependencies": {
+    "@informerus/api": "workspace:*",
+    "@informerus/utils": "workspace:*",
+    "@informerus/validators": "workspace:*",
+    "@trpc/client": "10.45.2",
+    "superjson": "2.2.1",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "@informerus/eslint-config": "workspace:*",
+    "@informerus/prettier-config": "workspace:*",
+    "@informerus/tsconfig": "workspace:*",
+    "@swc-node/register": "^1.9.1",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "@informerus/tsconfig/base.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "isolatedModules": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "outDir": "dist",
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+  },
+  "include": ["*.ts", "src"],
+  "exclude": ["node_modules"]
+}
