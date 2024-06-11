@@ -20,7 +20,10 @@ const createEnv = z.object({
     port: z.number().default(5000),
     secret: z.string(),
   }),
-  telegram: z.object({
+  sender: z.object({
+    token: z.string(),
+  }),
+  talker: z.object({
     exampleUrl: z.string(),
     token: z.string(),
   }),
@@ -42,9 +45,12 @@ export const ENV = createEnv.parse({
     port: Number(process.env.API_PORT),
     secret: process.env.API_SECRET,
   },
-  telegram: {
-    exampleUrl: process.env.TELEGRAM_EXAMPLE_URL,
-    token: process.env.TELEGRAM_TOKEN,
+  sender: {
+    token: process.env.SENDER_TOKEN,
+  },
+  talker: {
+    exampleUrl: process.env.TALKER_REST_EXAMPLE_URL,
+    token: process.env.TALKER_TOKEN,
   },
   rest: {
     port: Number(process.env.REST_PORT),

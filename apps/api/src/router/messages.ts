@@ -22,8 +22,17 @@ export const messages = {
     }),
   ),
 
-  send: publicProcedure.input(IncomingMessageSchema).mutation(({ input }) => {
-    console.log(input);
-    messageEvents.emit("add", input);
-  }),
+  send: publicProcedure
+    .input(IncomingMessageSchema)
+    .mutation(async ({ input, ctx }) => {
+      const userWithToken = await ctx.db.Users.findOneBy({
+        token: input.token,
+      });
+
+      if (!userWithToken) {
+        throw new Error("Такого токена нет");
+      }
+
+      messageEvents.emit("add", input);
+    }),
 };

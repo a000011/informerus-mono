@@ -11,8 +11,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --exec node --import @swc-node/register/esm-register ./src/index.ts",
-    "start": "node --import @swc-node/register/esm-register ./src/index.ts",
+    "dev": "nodemon --exec node --loader ts-node/esm ./src/index.ts",
+    "start": "node --loader ts-node/esm ./src/index.ts",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
@@ -21,6 +21,7 @@
   "prettier": "@informerus/prettier-config",
   "dependencies": {
     "@informerus/api": "workspace:*",
+    "@informerus/client": "workspace:*",
     "@informerus/utils": "workspace:*",
     "@informerus/validators": "workspace:*",
     "@trpc/client": "10.45.2",
@@ -32,6 +33,7 @@
     "@informerus/prettier-config": "workspace:*",
     "@informerus/tsconfig": "workspace:*",
     "@swc-node/register": "^1.9.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }
 }

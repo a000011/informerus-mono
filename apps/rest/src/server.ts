@@ -3,13 +3,13 @@ import helmet from "@fastify/helmet";
 import sensible from "@fastify/sensible";
 import fastify from "fastify";
 
-import { tryCatch } from "@informerus/utils";
+import { createInformerClient } from "@informerus/client";
 import { ENV } from "@informerus/validators";
 
-import { trpc } from "./client.js";
+export const trpc = createInformerClient();
 
 (() => {
-  const app = fastify()
+  const app = fastify({ logger: true })
     .register(sensible)
     .register(cors, { origin: "*", credentials: true })
     .register(helmet);
@@ -30,10 +30,9 @@ import { trpc } from "./client.js";
     return await trpc.messages.send.mutate({
       body: possiblePayload.body,
       topic: possiblePayload.topic,
+      token: request.headers.authorization!,
     });
   });
-
-  console.log("Options", options);
 
   void app.listen(options);
 })();

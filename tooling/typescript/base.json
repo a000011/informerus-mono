@@ -25,5 +25,8 @@
     "moduleResolution": "Bundler",
     "noEmit": true
   },
+  "ts-node": {
+    "transpileOnly": true
+  },
   "exclude": ["node_modules", "build", "dist", ".next", ".expo"]
 }

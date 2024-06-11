@@ -29,13 +29,13 @@ WebhookMenu.enter(async (ctx) => {
 
   const CURL_MESSAGES = {
     WINDOWS: [
-      `curl -XPOST "${ENV.telegram.exampleUrl}"`,
+      `curl -XPOST "${ENV.talker.exampleUrl}"`,
       '		--header "content-type: application/json"',
       `		--header "Authorization: ${token}"`,
       `		--data ${JSON.stringify(CURL_PAYLOAD.replaceAll('"', '\\"'))}`,
     ],
     LINUX: [
-      `curl -XPOST "${ENV.telegram.exampleUrl}"`,
+      `curl -XPOST "${ENV.talker.exampleUrl}"`,
       '		--header "content-type: application/json"',
       `		--header "Authorization: ${token}"`,
       `		--data ${JSON.stringify(CURL_PAYLOAD)}`,

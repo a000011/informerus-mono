@@ -3,7 +3,7 @@ import { observable } from "@trpc/server/observable";
 import * as R from "remeda";
 import { z } from "zod";
 
-import type { IncomingMessageType, NewChatType } from "@informerus/validators";
+import type { NewChatType } from "@informerus/validators";
 import { NewChatSchema, NewTopicSchema } from "@informerus/validators";
 
 import { publicProcedure } from "../trpc.js";
@@ -27,11 +27,19 @@ export const chat = {
   create: publicProcedure
     .input(NewChatSchema)
     .mutation(async ({ input, ctx }) => {
-      chatEvents.emit("add", input);
-
-      const user = await ctx.db.Users.findOneByOrFail({
+      const user = await ctx.db.Users.findOneBy({
         telegramId: input.triggeredById,
       });
+
+      if (!user) {
+        return "no_user_found";
+      }
+
+      const chat = await ctx.db.Chats.findOneBy({ telegramId: input.chatId });
+
+      if (chat) {
+        return "already_exits";
+      }
 
       await ctx.db.Chats.create({
         telegramId: input.chatId,
@@ -40,6 +48,7 @@ export const chat = {
       }).save();
 
       chatEvents.emit("created", input);
+      return "created";
     }),
 
   getAllTopics: publicProcedure

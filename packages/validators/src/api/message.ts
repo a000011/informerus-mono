@@ -9,6 +9,10 @@ export const IncomingMessageSchema = z.object({
    * Тело сообщения
    */
   body: z.string().trim().min(1),
+  /**
+   * Токен пользователя
+   */
+  token: z.string(),
 });
 
 export type IncomingMessageType = z.infer<typeof IncomingMessageSchema>;

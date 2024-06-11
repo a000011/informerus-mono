@@ -5,7 +5,7 @@ import { ENV } from "@informerus/validators";
 import { InformerContext } from "./context.js";
 import { privateMessagesBot } from "./stage/stage.js";
 
-const bot = new Telegraf(ENV.telegram.token, { contextType: InformerContext });
+const bot = new Telegraf(ENV.talker.token, { contextType: InformerContext });
 
 bot.catch((err) => console.error(err));
 bot.use(session());

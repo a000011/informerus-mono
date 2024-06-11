@@ -1,6 +1,7 @@
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
 import sensible from "@fastify/sensible";
+import ws from "@fastify/websocket";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import fastify from "fastify";
 
@@ -10,10 +11,14 @@ import { appRouter } from "./root.js";
 import { createTRPCContext } from "./trpc.js";
 
 (() => {
-  const app = fastify()
+  const app = fastify({
+    logger: true,
+  })
     .register(sensible)
+    .register(ws)
     .register(fastifyTRPCPlugin, {
       prefix: "/trpc",
+      useWSS: true,
       trpcOptions: { router: appRouter, createContext: createTRPCContext },
     })
     .register(cors, { origin: "*", credentials: true })
