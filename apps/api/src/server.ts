@@ -11,9 +11,7 @@ import { appRouter } from "./root.js";
 import { createTRPCContext } from "./trpc.js";
 
 (() => {
-  const app = fastify({
-    logger: true,
-  })
+  const app = fastify({ logger: true })
     .register(sensible)
     .register(ws)
     .register(fastifyTRPCPlugin, {
@@ -33,8 +31,6 @@ import { createTRPCContext } from "./trpc.js";
   if (ENV.api.port) {
     options.port = ENV.api.port;
   }
-
-  console.log("Options", options);
 
   void app.listen(options);
 })();

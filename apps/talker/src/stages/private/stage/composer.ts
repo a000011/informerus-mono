@@ -1,12 +1,10 @@
 import { Composer, Scenes } from "telegraf";
 
-import type { InformerContext } from "../context.js";
+import type { InformerContext } from "../../context.js";
 import { IntroductionMenu } from "./scenes/introduction.js";
 import { RegistrationMenu } from "./scenes/registration.js";
 import { RegistrationRetry } from "./scenes/registrationRetry.js";
 import { WebhookMenu } from "./scenes/webhook.js";
-
-export const privateMessagesBot = new Composer<InformerContext>();
 
 export const SCENES = {
   Introduction: IntroductionMenu,
@@ -15,15 +13,12 @@ export const SCENES = {
   RegistrationRetry: RegistrationRetry,
 } as const;
 
-const DEFAULT_SCENE = SCENES.Introduction.id;
-
-const stage = new Scenes.Stage<InformerContext>(Object.values(SCENES), {
-  default: DEFAULT_SCENE,
+const stage = new Scenes.Stage(Object.values(SCENES), {
+  default: SCENES.Introduction.id,
 });
 
 stage.use(
   Composer.compose([
-    Composer.catch((err) => console.error(err)),
     async (ctx, next) => {
       if (!ctx.from?.id) {
         return;
@@ -31,10 +26,17 @@ stage.use(
 
       await ctx.trpc.user.create.mutate({ userId: ctx.from.id });
 
-      return next();
+      return await next();
     },
+    Composer.command("start", (ctx) => ctx.navigator.goto("Introduction")),
+    Composer.dispatch((ctx) => ctx.session.currentScene, SCENES),
+    async (ctx) => {
+      await ctx.reply("Я не понимаю эту команду");
+
+      await ctx.navigator.goto(ctx.session.currentScene);
+    },
+    Composer.catch((err) => console.error(err)),
   ]),
 );
 
-privateMessagesBot.use(stage.middleware());
-privateMessagesBot.start((ctx) => ctx.navigator.goto("Introduction"));
+export const privateMessagesModule = new Composer(stage.middleware());

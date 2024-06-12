@@ -1,6 +1,6 @@
 import { Markup, Scenes } from "telegraf";
 
-import type { InformerContext } from "../../context.js";
+import type { InformerContext } from "../../../context.js";
 import { createButtonHelper } from "../buttonHelper.js";
 
 export const RegistrationRetry = new Scenes.BaseScene<InformerContext>(
@@ -21,8 +21,8 @@ const message = [
 ].join("\n");
 
 RegistrationRetry.enter(async (ctx) => {
-  await ctx.editMessageText(message, {
-    parse_mode: "MarkdownV2",
-    ...Markup.inlineKeyboard([[retryButton, mainMenuButton]]),
-  });
+  await ctx.replyWithMarkdownV2(
+    message,
+    Markup.keyboard([[retryButton, mainMenuButton]]).resize(),
+  );
 });

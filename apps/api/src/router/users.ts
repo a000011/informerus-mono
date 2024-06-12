@@ -30,6 +30,7 @@ export const user = {
     return {
       telegramId: user.telegramId,
       token: user.token,
+      chatId: user.chat?.telegramId,
     };
   }),
 

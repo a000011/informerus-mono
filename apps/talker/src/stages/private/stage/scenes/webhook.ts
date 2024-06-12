@@ -4,17 +4,12 @@ import type { IncomingMessageType } from "@informerus/validators";
 import { commandBlock } from "@informerus/utils";
 import { ENV } from "@informerus/validators";
 
-import type { InformerContext } from "../../context.js";
+import type { InformerContext } from "../../../context.js";
 import { createButtonHelper } from "../buttonHelper.js";
 
 export const WebhookMenu = new Scenes.BaseScene<InformerContext>("WebhookMenu");
 
 const createButton = createButtonHelper(WebhookMenu);
-
-const CURL_PAYLOAD = JSON.stringify({
-  topic: "Test Thread",
-  body: "Test Message",
-} satisfies IncomingMessageType);
 
 const gotoMainMenuButton = createButton("В настройки чата", (ctx) =>
   ctx.navigator.goto("Introduction"),
@@ -27,14 +22,20 @@ WebhookMenu.enter(async (ctx) => {
 
   const { token } = await ctx.trpc.user.findById.query(ctx.from.id);
 
+  const CURL_PAYLOAD = JSON.stringify({
+    topic: "Test Thread",
+    body: "Test Message",
+    token,
+  } satisfies IncomingMessageType);
+
   const CURL_MESSAGES = {
-    WINDOWS: [
+    CMD: [
       `curl -XPOST "${ENV.talker.exampleUrl}"`,
       '		--header "content-type: application/json"',
       `		--header "Authorization: ${token}"`,
       `		--data ${JSON.stringify(CURL_PAYLOAD.replaceAll('"', '\\"'))}`,
     ],
-    LINUX: [
+    UNIX: [
       `curl -XPOST "${ENV.talker.exampleUrl}"`,
       '		--header "content-type: application/json"',
       `		--header "Authorization: ${token}"`,
@@ -50,20 +51,20 @@ WebhookMenu.enter(async (ctx) => {
     "Вы можете протестировать работу бота через CURL\\.",
     "Для Windows\\:",
     commandBlock({
-      content: CURL_MESSAGES.WINDOWS,
+      content: CURL_MESSAGES.CMD,
       platform: "windows",
       lang: "sh",
     }),
     "Для Linux\\:",
     commandBlock({
-      content: CURL_MESSAGES.LINUX,
+      content: CURL_MESSAGES.UNIX,
       platform: "linux",
       lang: "sh",
     }),
   ].join("\n");
 
-  await ctx.editMessageText(message, {
-    parse_mode: "MarkdownV2",
-    ...Markup.inlineKeyboard([gotoMainMenuButton]),
-  });
+  await ctx.replyWithMarkdownV2(
+    message,
+    Markup.keyboard([gotoMainMenuButton]).resize(),
+  );
 });
