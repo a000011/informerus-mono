@@ -1,6 +1,3 @@
-import type { Context, NarrowedContext } from "telegraf";
-import type { Update } from "telegraf/types";
-import type * as tt from "telegraf/types";
 import { Composer } from "telegraf";
 
 import type { InformerContext } from "../context.js";

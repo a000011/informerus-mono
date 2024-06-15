@@ -16,7 +16,7 @@ export class TelegramChatDB extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "bigint" })
+  @Column({ unique: true, type: "bigint" })
   telegramId: number;
 
   @OneToOne(() => TelegramUserDB, (user) => user.chat)

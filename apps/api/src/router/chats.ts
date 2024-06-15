@@ -69,13 +69,27 @@ export const chat = {
       });
 
       if (alreadyExistingTopic) {
+        if (alreadyExistingTopic.telegramId !== input.id) {
+          alreadyExistingTopic.telegramId = input.id;
+          await alreadyExistingTopic.save();
+
+          return "already_exists_updated";
+        }
+
         return "already_exists";
       }
 
-      await ctx.db.Topics.create({
+      const newTopic = await ctx.db.Topics.create({
         telegramId: input.id,
         name: input.name,
       }).save();
+
+      const chat = await ctx.db.Chats.findOneByOrFail({
+        telegramId: input.chatId,
+      });
+
+      chat.topics.push(newTopic);
+      await chat.save();
 
       return "created";
     }),

@@ -18,14 +18,13 @@ const createEnv = z.object({
   api: z.object({
     host: z.string().default("localhost"),
     port: z.number().default(5000),
-    secret: z.string(),
   }),
   talker: z.object({
     exampleUrl: z.string(),
     token: z.string(),
   }),
   rest: z.object({
-    port: z.number().default(5001),
+    port: z.number().default(3000),
     host: z.string().default("localhost"),
   }),
 });
@@ -40,7 +39,6 @@ export const ENV = createEnv.parse({
   api: {
     host: process.env.API_HOST,
     port: Number(process.env.API_PORT),
-    secret: process.env.API_SECRET,
   },
   talker: {
     exampleUrl: process.env.TALKER_REST_EXAMPLE_URL,

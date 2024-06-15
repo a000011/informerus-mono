@@ -1,8 +1,8 @@
 {
-  "name": "@informerus/validators",
+  "name": "@informerus/sender",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
+  "private": true,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -11,24 +11,30 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "dev": "nodemon --exec node --loader ts-node/esm ./src/index.ts",
+    "start": "node --loader ts-node/esm ./src/index.ts",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
+  "prettier": "@informerus/prettier-config",
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "find-up": "^7.0.0",
-    "zod": "^3.23.8"
+    "@informerus/api": "workspace:*",
+    "@informerus/client": "workspace:*",
+    "@informerus/utils": "workspace:*",
+    "@informerus/validators": "workspace:*",
+    "@trpc/client": "10.45.2",
+    "superjson": "2.2.1",
+    "telegraf": "^4.16.3",
+    "telegram-markdown-sanitizer": "^0.0.11"
   },
   "devDependencies": {
     "@informerus/eslint-config": "workspace:*",
     "@informerus/prettier-config": "workspace:*",
     "@informerus/tsconfig": "workspace:*",
-    "eslint": "^9.2.0",
-    "prettier": "^3.2.5",
+    "@swc-node/register": "^1.9.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
-  },
-  "prettier": "@informerus/prettier-config"
+  }
 }

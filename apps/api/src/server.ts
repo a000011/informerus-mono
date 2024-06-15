@@ -11,7 +11,13 @@ import { appRouter } from "./root.js";
 import { createTRPCContext } from "./trpc.js";
 
 (() => {
-  const app = fastify({ logger: true })
+  const app = fastify({
+    logger: {
+      transport: {
+        target: "pino-pretty",
+      },
+    },
+  })
     .register(sensible)
     .register(ws)
     .register(fastifyTRPCPlugin, {

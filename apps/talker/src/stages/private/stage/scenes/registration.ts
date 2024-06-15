@@ -6,12 +6,12 @@ import { sleepMs } from "@informerus/utils";
 
 import type { InformerContext } from "../../../context.js";
 import { createButtonHelper } from "../buttonHelper.js";
-import { SCENES } from "../composer.js";
 
 const images = [
   path.join(process.cwd(), "/src/img/enableTopics.jpg"),
   path.join(process.cwd(), "/src/img/addToGroup1.jpg"),
   path.join(process.cwd(), "/src/img/addToGroup2.jpg"),
+  path.join(process.cwd(), "/src/img/admin.png"),
 ];
 
 export const RegistrationMenu = new Scenes.BaseScene<InformerContext>(
@@ -24,6 +24,7 @@ const message = [
   "Для начала вы должны:",
   "	- Включить в вашей группе топики",
   "	- Добавить меня в вашу группу",
+  "	- Добавить меня в админы (необходимо для создания топиков)",
   "	- Выполнить команду '/register' если группа приватная",
 ].join("\n");
 

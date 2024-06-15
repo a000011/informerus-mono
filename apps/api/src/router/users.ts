@@ -34,6 +34,21 @@ export const user = {
     };
   }),
 
+  findByToken: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.db.Users.findOneByOrFail({ token: input });
+
+      console.log(user.chat?.telegramId);
+      console.log(typeof user.chat?.telegramId);
+
+      return {
+        telegramId: user.telegramId,
+        token: user.token,
+        chatId: user.chat?.telegramId,
+      };
+    }),
+
   create: publicProcedure
     .input(NewUserSchema)
     .mutation(async ({ input, ctx }) => {

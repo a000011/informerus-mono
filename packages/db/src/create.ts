@@ -1,13 +1,16 @@
-import path from "path";
 import type { DataSourceOptions } from "typeorm";
 import pg from "pg";
 import { DataSource } from "typeorm";
 
 import { tryCatchAsync } from "@informerus/utils";
 
-const { TelegramChatDB } = await import("./entities/telegram/chat.js");
-const { TelegramTopicDB } = await import("./entities/telegram/topic.js");
-const { TelegramUserDB } = await import("./entities/telegram/user.js");
+import { TelegramChatDB } from "./entities/telegram/chat.js";
+import { TelegramTopicDB } from "./entities/telegram/topic.js";
+import { TelegramUserDB } from "./entities/telegram/user.js";
+
+pg.types.setTypeParser(pg.types.builtins.INT8, function (val) {
+  return Number(val);
+});
 
 const defaultDatabaseConfig = {
   type: "postgres",
