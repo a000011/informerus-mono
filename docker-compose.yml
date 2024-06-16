@@ -4,5 +4,5 @@ services:
     build:
       dockerfile: Dockerfile
     pull_policy: build
-    # ports:
-    # - "3000:3000"
+    ports:
+      - "3000:3000"

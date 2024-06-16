@@ -7,4 +7,4 @@ COPY . /informer
 RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN pnpm i
 
-RUN pnpm dev
+CMD pnpm dev
