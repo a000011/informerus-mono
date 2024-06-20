@@ -20,7 +20,6 @@ const defaultDatabaseConfig = {
   entities: [TelegramChatDB, TelegramTopicDB, TelegramUserDB],
   migrations: [],
   subscribers: [],
-  dropSchema: true,
 } satisfies Partial<DataSourceOptions>;
 
 interface CreateDatabaseOptions {

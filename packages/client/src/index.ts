@@ -8,13 +8,11 @@ import {
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "@informerus/api";
-import { ENV } from "@informerus/validators";
 
 import "./polyfill.js";
 
-const urlEnd = `${ENV.api.host}:${ENV.api.port}/trpc`;
-
-export const createInformerClient = () => {
+export const createInformerClient = (host: string) => {
+  const urlEnd = `${host}/trpc`;
   const wsClient = createWSClient({ url: `ws://${urlEnd}` });
 
   return createTRPCProxyClient<AppRouter>({

@@ -6,7 +6,7 @@ import fastify from "fastify";
 import { createInformerClient } from "@informerus/client";
 import { ENV } from "@informerus/validators";
 
-export const trpc = createInformerClient();
+export const trpc = createInformerClient(ENV.rest.apiHost);
 
 (() => {
   const app = fastify({ logger: true })
