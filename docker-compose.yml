@@ -1,8 +1,24 @@
 version: "3"
 services:
-  informer:
+  informer-api:
     build:
       dockerfile: Dockerfile
     pull_policy: build
+    entrypoint: pnpm -C ./apps/api dev
+  informer-rest:
+    build:
+      dockerfile: Dockerfile
+    pull_policy: build
+    entrypoint: pnpm -C ./apps/rest dev
     ports:
       - "3000:3000"
+  informer-sender:
+    build:
+      dockerfile: Dockerfile
+    pull_policy: build
+    entrypoint: pnpm -C ./apps/sender dev
+  informer-talker:
+    build:
+      dockerfile: Dockerfile
+    pull_policy: build
+    entrypoint: pnpm -C ./apps/talker dev
