@@ -14,7 +14,7 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "build": "tsc .",
+    "build": "tsc -d --project tsconfig.json --outDir ./dist",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "release": "release-it"
   },

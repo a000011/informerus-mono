@@ -18,7 +18,8 @@
         ".expo/**",
         ".output/**",
         ".vercel/output/**"
-      ]
+      ],
+      "cache": false
     },
     "dev": {
       "persistent": true,
