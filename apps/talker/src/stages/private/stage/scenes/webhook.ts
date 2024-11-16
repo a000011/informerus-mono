@@ -25,8 +25,7 @@ WebhookMenu.enter(async (ctx) => {
   const CURL_PAYLOAD = JSON.stringify({
     topic: "Test Thread",
     body: "Test Message",
-    token,
-  } satisfies IncomingMessageType);
+  } satisfies Omit<IncomingMessageType, "token">);
 
   const CURL_MESSAGES = {
     CMD: [
