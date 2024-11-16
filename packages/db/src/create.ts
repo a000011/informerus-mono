@@ -22,12 +22,12 @@ const defaultDatabaseConfig = {
   subscribers: [],
 } satisfies Partial<DataSourceOptions>;
 
-interface CreateDatabaseOptions {
+type CreateDatabaseOptions = {
   host: string;
   username: string;
   password: string;
   port: number;
-}
+};
 
 export const createDatabaseConnection = async (
   options: CreateDatabaseOptions,
