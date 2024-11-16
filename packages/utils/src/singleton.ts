@@ -3,7 +3,7 @@ export interface CachePropertyDescriptor<T, R> extends PropertyDescriptor {
 }
 
 export const singleton = <T, R>(
-  target: any,
+  _: object,
   name: PropertyKey,
   descriptor: CachePropertyDescriptor<T, R>,
 ) => {

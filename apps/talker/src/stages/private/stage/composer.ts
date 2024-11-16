@@ -1,6 +1,5 @@
 import { Composer, Scenes } from "telegraf";
 
-import type { InformerContext } from "../../context.js";
 import { IntroductionMenu } from "./scenes/introduction.js";
 import { RegistrationMenu } from "./scenes/registration.js";
 import { RegistrationRetry } from "./scenes/registrationRetry.js";

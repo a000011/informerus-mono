@@ -3,9 +3,6 @@
   "experimentalUI": true,
   "globalDependencies": ["**/.env"],
   "pipeline": {
-    "topo": {
-      "dependsOn": ["^topo"]
-    },
     "start": {},
     "build": {
       "dependsOn": ["^build"],
@@ -27,7 +24,6 @@
       "outputMode": "new-only"
     },
     "lint": {
-      "dependsOn": ["^topo", "^build"],
       "outputs": ["node_modules/.cache/.eslintcache"]
     },
     "typecheck": {

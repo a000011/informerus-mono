@@ -1,11 +1,14 @@
 {
   "extends": "@informerus/tsconfig/base.json",
   "compilerOptions": {
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
     "isolatedModules": false,
     "noEmit": false,
     "outDir": "dist",
     "skipLibCheck": true,
+    "strictPropertyInitialization": false,
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
   "include": ["*.ts", "src"],

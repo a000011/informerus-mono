@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 /* eslint-disable no-async-promise-executor */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
@@ -21,12 +21,14 @@ export class TopicMessage {
       telegramId: number;
       token: string;
       chatId: number;
-    }>(async (resolve) => {
+    }>(async (resolve, reject) => {
       const user = await trpc.user.findByToken.query(this.message.token);
       if (!user.chatId) {
-        throw new Error("No user chat found!");
+        return reject("No user chat found!");
       }
-      resolve(user as any);
+      return resolve(
+        user as { telegramId: number; token: string; chatId: number },
+      );
     });
   }
 

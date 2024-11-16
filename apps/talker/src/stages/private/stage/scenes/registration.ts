@@ -47,7 +47,11 @@ const waitForRegistration = (ctx: InformerContext) =>
 const waitForTimeout = () => sleepMs(45000).then(() => "timeout" as const);
 
 RegistrationMenu.enter(async (ctx) => {
-  const possibleUser = await ctx.trpc.user.findById.query(ctx.from?.id!);
+  if (!ctx.from) {
+    throw new Error("Message is not from a user");
+  }
+
+  const possibleUser = await ctx.trpc.user.findById.query(ctx.from.id);
 
   if (possibleUser.chatId) {
     await ctx.replyWithMarkdownV2(sanitizeMarkdown("У вас уже есть группа"));

@@ -25,6 +25,8 @@ export const trpc = createInformerClient(ENV.rest.apiHost);
   }
 
   app.post("/topic/message", async (request) => {
+    // Ignoring `any`, zod will deal with it
+    /* eslint-disable */
     const possiblePayload = request.body as any;
 
     return await trpc.messages.send.mutate({
@@ -32,6 +34,7 @@ export const trpc = createInformerClient(ENV.rest.apiHost);
       topic: possiblePayload.topic,
       token: request.headers.authorization!,
     });
+    /* eslint-enable */
   });
 
   void app.listen(options);
