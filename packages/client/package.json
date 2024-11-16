@@ -1,6 +1,6 @@
 {
   "name": "@informerus/client",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "private": false,
   "type": "module",
   "main": "./dist/index.js",
@@ -24,6 +24,7 @@
     "got": "^14.4.4"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.9",
     "@informerus/eslint-config": "workspace:*",
     "@informerus/prettier-config": "workspace:*",
     "@informerus/tsconfig": "workspace:*",
