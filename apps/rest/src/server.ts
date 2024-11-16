@@ -3,7 +3,7 @@ import helmet from "@fastify/helmet";
 import sensible from "@fastify/sensible";
 import fastify from "fastify";
 
-import { createInformerClient } from "@informerus/client";
+import { createInformerClient } from "@informerus/trpc-client";
 import { ENV } from "@informerus/validators";
 
 export const trpc = createInformerClient(ENV.rest.apiHost);

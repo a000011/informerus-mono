@@ -1,30 +1,10 @@
-import {
-  createTRPCProxyClient,
-  createWSClient,
-  httpBatchLink,
-  splitLink,
-  wsLink,
-} from "@trpc/client";
-import SuperJSON from "superjson";
+import type { CreationOptions } from "./connectionOptions.js";
+import { createMessageSender } from "./createMessageSender.js";
 
-import type { AppRouter } from "@informerus/api";
-
-import "./polyfill.js";
-
-export const createInformerClient = (host: string) => {
-  const urlEnd = `${host}/trpc`;
-  const wsClient = createWSClient({ url: `ws://${urlEnd}` });
-
-  return createTRPCProxyClient<AppRouter>({
-    links: [
-      splitLink({
-        condition(op) {
-          return op.type === "subscription";
-        },
-        true: wsLink({ client: wsClient }),
-        false: httpBatchLink({ url: `http://${urlEnd}` }),
-      }),
-    ],
-    transformer: SuperJSON,
-  });
-};
+/**
+ * Creates an client to
+ * @param options Options to create a connection
+ */
+export const createInformerApi = (options: CreationOptions) => ({
+  sendMessage: createMessageSender({ host: "stercus.ru:3000", ...options }),
+});

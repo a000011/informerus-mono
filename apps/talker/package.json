@@ -21,7 +21,7 @@
   "prettier": "@informerus/prettier-config",
   "dependencies": {
     "@informerus/api": "workspace:*",
-    "@informerus/client": "workspace:*",
+    "@informerus/trpc-client": "workspace:*",
     "@informerus/utils": "workspace:*",
     "@informerus/validators": "workspace:*",
     "@trpc/client": "10.45.2",

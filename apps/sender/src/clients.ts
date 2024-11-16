@@ -1,6 +1,6 @@
 import { Telegraf } from "telegraf";
 
-import { createInformerClient } from "@informerus/client";
+import { createInformerClient } from "@informerus/trpc-client";
 import { ENV } from "@informerus/validators";
 
 // Note: Do not use "launch" method.

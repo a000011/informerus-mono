@@ -1,12 +1,12 @@
 {
   "name": "@informerus/client",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
   "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
+      "default": "./dist/index.js"
     }
   },
   "license": "MIT",
@@ -14,22 +14,20 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "build": "tsc .",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "release": "release-it"
   },
   "dependencies": {
-    "@informerus/utils": "workspace:*",
-    "@informerus/validators": "workspace:*",
-    "@trpc/client": "10.45.2",
-    "superjson": "2.2.1",
-    "ws": "^8.17.0"
+    "got": "^14.4.4"
   },
   "devDependencies": {
-    "@informerus/api": "workspace:*",
     "@informerus/eslint-config": "workspace:*",
     "@informerus/prettier-config": "workspace:*",
     "@informerus/tsconfig": "workspace:*",
     "eslint": "^9.2.0",
     "prettier": "^3.2.5",
+    "release-it": "^17.10.0",
     "typescript": "^5.4.5"
   },
   "prettier": "@informerus/prettier-config"

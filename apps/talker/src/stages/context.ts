@@ -1,7 +1,7 @@
 import type { Scenes } from "telegraf";
 import { Context } from "telegraf";
 
-import { createInformerClient } from "@informerus/client";
+import { createInformerClient } from "@informerus/trpc-client";
 import { ENV } from "@informerus/validators";
 
 import type { InformerSession } from "./session.js";
