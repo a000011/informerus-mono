@@ -20,10 +20,10 @@ services:
       dockerfile: Dockerfile
     healthcheck:
       test: curl --fail http://localhost:${API_PORT}/health || exit 1
-      interval: 40s
+      interval: 20s
       timeout: 30s
       retries: 3
-      start_period: 60s
+      start_period: 20s
     environment: *environment-vars
     pull_policy: build
     entrypoint: pnpm -C ./apps/api dev
