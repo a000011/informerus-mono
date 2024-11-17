@@ -1,17 +1,12 @@
 {
   "extends": "@informerus/tsconfig/base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
     "isolatedModules": false,
     "outDir": "dist",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "skipLibCheck": true,
     "noEmit": false
   },
   "include": ["src"],

@@ -1,5 +1,6 @@
 import { Composer, Scenes } from "telegraf";
 
+import { ChatSettingsMenu } from "./scenes/chatSettings.js";
 import { IntroductionMenu } from "./scenes/introduction.js";
 import { RegistrationMenu } from "./scenes/registration.js";
 import { RegistrationRetry } from "./scenes/registrationRetry.js";
@@ -10,6 +11,7 @@ export const SCENES = {
   Registration: RegistrationMenu,
   Webhook: WebhookMenu,
   RegistrationRetry: RegistrationRetry,
+  ChatSettings: ChatSettingsMenu,
 } as const;
 
 const stage = new Scenes.Stage(Object.values(SCENES), {
@@ -23,7 +25,10 @@ stage.use(
         return;
       }
 
-      await ctx.trpc.user.create.mutate({ userId: ctx.from.id });
+      if (!ctx.session.user) {
+        await ctx.trpc.user.create.mutate({ userId: ctx.from.id });
+        await ctx.revalidateCache();
+      }
 
       return await next();
     },

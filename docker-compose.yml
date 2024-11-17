@@ -1,13 +1,39 @@
 version: "3"
+
+x-environment-vars: &environment-vars
+  - API_HOST=${API_HOST}
+  - API_PORT=${API_PORT}
+  - POSTGRES_HOST=${POSTGRES_HOST}
+  - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  - POSTGRES_PORT=${POSTGRES_PORT}
+  - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+  - API_HOST_CONNECTION=${API_HOST_CONNECTION}
+  - REST_HOST=${REST_HOST}
+  - REST_PORT=${REST_PORT}
+  - SENDER_TOKEN=${SENDER_TOKEN}
+  - TALKER_REST_EXAMPLE_URL=${TALKER_REST_EXAMPLE_URL}
+  - TALKER_TOKEN=${TALKER_TOKEN}
+
 services:
   informer-api:
     build:
       dockerfile: Dockerfile
+    healthcheck:
+      test: curl --fail http://localhost:${API_PORT}/health || exit 1
+      interval: 40s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
+    environment: *environment-vars
     pull_policy: build
     entrypoint: pnpm -C ./apps/api dev
   informer-rest:
     build:
       dockerfile: Dockerfile
+    depends_on:
+      informer-api:
+        condition: service_healthy
+    environment: *environment-vars
     pull_policy: build
     entrypoint: pnpm -C ./apps/rest dev
     ports:
@@ -15,10 +41,18 @@ services:
   informer-sender:
     build:
       dockerfile: Dockerfile
+    depends_on:
+      informer-api:
+        condition: service_healthy
+    environment: *environment-vars
     pull_policy: build
     entrypoint: pnpm -C ./apps/sender dev
   informer-talker:
     build:
       dockerfile: Dockerfile
+    depends_on:
+      informer-api:
+        condition: service_healthy
+    environment: *environment-vars
     pull_policy: build
     entrypoint: pnpm -C ./apps/talker dev

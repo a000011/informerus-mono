@@ -55,7 +55,7 @@ RegistrationMenu.enter(async (ctx) => {
 
   if (possibleUser.chatId) {
     await ctx.replyWithMarkdownV2(sanitizeMarkdown("У вас уже есть группа"));
-    await ctx.navigator.goto("Introduction");
+    await ctx.navigator.goto("ChatSettings");
     return;
   }
 
@@ -64,7 +64,7 @@ RegistrationMenu.enter(async (ctx) => {
       return {
         type: "photo",
         media: { source: image },
-        caption: !index ? message : undefined,
+        caption: index === 0 ? message : undefined,
       };
     }),
   );

@@ -1,10 +1,7 @@
 {
   "extends": "@informerus/tsconfig/internal-package.json",
   "compilerOptions": {
-    "moduleResolution": "NodeNext",
-    "module": "NodeNext",
     "outDir": "dist",
-    "strictPropertyInitialization": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"

@@ -10,7 +10,7 @@ import { ENV } from "@informerus/validators";
 import { appRouter } from "./root.js";
 import { createTRPCContext } from "./trpc.js";
 
-(() => {
+export const startServer = async () => {
   const app = fastify({
     logger: {
       transport: {
@@ -28,6 +28,12 @@ import { createTRPCContext } from "./trpc.js";
     .register(cors, { origin: "*", credentials: true })
     .register(helmet);
 
+  app.get("/health", async (_, reply) => {
+    await reply
+      .code(200)
+      .send({ statusCode: 200, status: "ok", uptime: process.uptime() });
+  });
+
   const options: fastify.FastifyListenOptions = {};
 
   if (ENV.api.host) {
@@ -38,5 +44,5 @@ import { createTRPCContext } from "./trpc.js";
     options.port = ENV.api.port;
   }
 
-  void app.listen(options);
-})();
+  await app.listen(options);
+};

@@ -12,7 +12,7 @@ export const WebhookMenu = new Scenes.BaseScene<InformerContext>("WebhookMenu");
 const createButton = createButtonHelper(WebhookMenu);
 
 const gotoMainMenuButton = createButton("В настройки чата", (ctx) =>
-  ctx.navigator.goto("Introduction"),
+  ctx.navigator.goto("ChatSettings"),
 );
 
 WebhookMenu.enter(async (ctx) => {

@@ -149,6 +149,12 @@ export class TopicMessage {
       await this.sendMessage();
     });
 
+    if (!err) {
+      return;
+    }
+
+    console.warn("Ошибка при отправке сообщения:" + `${err.name}`);
+
     if (!(err instanceof TelegramError)) {
       throw err;
     }

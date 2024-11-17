@@ -11,7 +11,10 @@ export const setupChatsHandlers = (bot: Telegraf<InformerContext>) =>
   bot.use(
     Composer.compose([
       session({ defaultSession }),
-      Composer.chatType("private", privateMessagesModule),
+      Composer.chatType(
+        "private",
+        Composer.on("message", privateMessagesModule),
+      ),
       Composer.chatType("group", groupMessagesModule),
       Composer.chatType("supergroup", superchatMessagesModule),
     ]),

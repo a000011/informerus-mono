@@ -1,3 +1,4 @@
+import type { CreateTRPCProxyClient } from "@trpc/client";
 import {
   createTRPCProxyClient,
   createWSClient,
@@ -11,7 +12,9 @@ import type { AppRouter } from "@informerus/api";
 
 import "./polyfill.js";
 
-export const createInformerClient = (host: string) => {
+export const createInformerClient = (
+  host: string,
+): CreateTRPCProxyClient<AppRouter> => {
   const urlEnd = `${host}/trpc`;
   const wsClient = createWSClient({ url: `ws://${urlEnd}` });
 

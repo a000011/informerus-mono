@@ -28,9 +28,10 @@
     "@informerus/eslint-config": "workspace:*",
     "@informerus/prettier-config": "workspace:*",
     "@informerus/tsconfig": "workspace:*",
+    "@types/ws": "^8.5.13",
     "eslint": "^9.2.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.4.5"
+    "typescript": "5.6.3"
   },
   "prettier": "@informerus/prettier-config"
 }

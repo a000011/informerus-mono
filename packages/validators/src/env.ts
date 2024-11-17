@@ -16,20 +16,18 @@ const createEnv = z.object({
     password: z.string(),
   }),
   api: z.object({
+    connectionUrl: z.string(),
     host: z.string(),
     port: z.number(),
   }),
   sender: z.object({
-    apiHost: z.string(),
     token: z.string(),
   }),
   talker: z.object({
-    apiHost: z.string(),
     exampleUrl: z.string(),
     token: z.string(),
   }),
   rest: z.object({
-    apiHost: z.string(),
     port: z.number(),
     host: z.string(),
   }),
@@ -43,20 +41,18 @@ export const ENV = createEnv.parse({
     password: process.env.POSTGRES_PASSWORD,
   },
   api: {
+    connectionUrl: process.env.API_HOST_CONNECTION,
     host: process.env.API_HOST,
     port: Number(process.env.API_PORT),
   },
   sender: {
-    apiHost: process.env.SENDER_API_HOST,
     token: process.env.SENDER_TOKEN,
   },
   talker: {
-    apiHost: process.env.TALKER_API_HOST,
     exampleUrl: process.env.TALKER_REST_EXAMPLE_URL,
     token: process.env.TALKER_TOKEN,
   },
   rest: {
-    apiHost: process.env.REST_API_HOST,
     port: Number(process.env.REST_PORT),
     host: process.env.REST_HOST,
   },

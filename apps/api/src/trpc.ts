@@ -7,20 +7,20 @@ import { ZodError } from "zod";
 import { createDatabaseConnection } from "@informerus/db";
 import { ENV } from "@informerus/validators";
 
-const db = createDatabaseConnection({
+const db = await createDatabaseConnection({
   host: ENV.postgres.host,
   port: ENV.postgres.port,
   password: ENV.postgres.password,
   username: ENV.postgres.username,
 });
 
-export const createTRPCContext = async ({
+export const createTRPCContext = ({
   req,
   res,
 }: CreateFastifyContextOptions) => {
   return {
     fastify: req.server,
-    db: await db,
+    db,
     req,
     res,
   };

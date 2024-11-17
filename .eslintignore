@@ -1,3 +1,4 @@
 /turbo.json
-/**/*.js
-/**/*.json
+**/*.js
+**/*.json
+node_modules
