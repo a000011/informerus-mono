@@ -31,6 +31,13 @@ const createEnv = z.object({
     port: z.number(),
     host: z.string(),
   }),
+  review: z.object({
+    token: z.string(),
+  }),
+  strapi: z.object({
+    token: z.string(),
+    host: z.string(),
+  }),
 });
 
 export const ENV = createEnv.parse({
@@ -55,5 +62,12 @@ export const ENV = createEnv.parse({
   rest: {
     port: Number(process.env.REST_PORT),
     host: process.env.REST_HOST,
+  },
+  review: {
+    token: process.env.REVIEW_TOKEN,
+  },
+  strapi: {
+    host: process.env.STRAPI_HOST,
+    token: process.env.STRAPI_TOKEN,
   },
 });

@@ -1,0 +1,13 @@
+{
+  "extends": "@informerus/tsconfig/base.json",
+  "compilerOptions": {
+    "isolatedModules": false,
+    "outDir": "dist",
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noEmit": false
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
