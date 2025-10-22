@@ -33,6 +33,7 @@ const createEnv = z.object({
   }),
   review: z.object({
     token: z.string(),
+    senderGroupToken: z.string(),
   }),
   strapi: z.object({
     token: z.string(),
@@ -65,6 +66,7 @@ export const ENV = createEnv.parse({
   },
   review: {
     token: process.env.REVIEW_TOKEN,
+    senderGroupToken: process.env.SENDER_GROUP_TOKEN,
   },
   strapi: {
     host: process.env.STRAPI_HOST,

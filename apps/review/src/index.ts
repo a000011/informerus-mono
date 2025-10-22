@@ -1,10 +1,12 @@
-import { Context, Markup, session, Telegraf } from "telegraf";
+import type { Context } from "telegraf";
+import { Markup, session, Telegraf } from "telegraf";
 
 import { ENV } from "@informerus/validators";
-import { Update } from "telegraf/types";
+import type { Update } from "telegraf/types";
 import { fetchAdresses } from "./strapi/index.js";
 import { addMediaActions } from "./actions/media.js";
 import { submitReview } from "./actions/submitReview.js";
+import { createInformerClient } from "@informerus/trpc-client";
 
 export type FilesType = {
   id: string;
@@ -17,6 +19,8 @@ export type FilesType = {
 export type MyContext<U extends Update = Update> = {
   session: {
     filial: string;
+    userName: string;
+    publickName: string;
     content: string;
     mark: number;
     pendingGroupId: string;
@@ -24,8 +28,9 @@ export type MyContext<U extends Update = Update> = {
   };
 } & Context<U>;
 
-//TODO
 const marks = Array.from({ length: 5 }).map((_, index) => index + 1);
+
+export const trpc = createInformerClient(ENV.api.connectionUrl);
 
 const bot = new Telegraf<MyContext>(ENV.review.token);
 export type BotType = typeof bot;
@@ -33,6 +38,8 @@ export type BotType = typeof bot;
 bot.use(
   session({
     defaultSession: () => ({
+      userName: "",
+      publickName: "",
       pendingGroupId: "",
       content: "",
       filial: "",
@@ -45,14 +52,25 @@ bot.use(
 
 addMediaActions(bot);
 
+bot.catch(async (err, ctx) => {
+  console.error(`Ошибка для пользователя ${ctx.from?.id}:`, err);
+  await trpc.messages.send.mutate({
+    body: (err as Error).message,
+    token: ENV.review.senderGroupToken,
+    topic: "Ошибки",
+  });
+});
+
 bot.start(async (ctx) => {
   const adresses = (await fetchAdresses()).data;
+  ctx.session.userName = ctx.message.from.username ?? "";
+  ctx.session.publickName = `${ctx.message.from.first_name} ${ctx.message.from.last_name}`;
 
   await ctx.reply(
     "Выберите филиал:",
     Markup.inlineKeyboard(
       adresses.map((adr) =>
-        Markup.button.callback(adr.adress, `adr_${adr.documentId}`),
+        Markup.button.callback(adr.Address, `adr_${adr.documentId}`),
       ),
       {
         columns: 1,
@@ -85,9 +103,9 @@ bot.action(predicateFn, async (ctx) => {
       throw Error("Can not find address");
     }
 
-    await ctx.editMessageText(adress.adress);
+    await ctx.editMessageText(adress.Address);
 
-    ctx.session.filial = adress.adress;
+    ctx.session.filial = adress.Address;
 
     await ctx.reply(
       "Отлично! Теперь оцените, как всё прошло ⭐️",
@@ -150,6 +168,8 @@ bot.action(["finishReview", "submitPhoto"], async (ctx) => {
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   submitReview(ctx.session);
   ctx.session = {
+    userName: "",
+    publickName: "",
     pendingGroupId: "",
     content: "",
     filial: "",

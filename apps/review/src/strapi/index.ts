@@ -1,6 +1,6 @@
 import { strapi } from "@strapi/client";
 import { ENV } from "@informerus/validators";
-import { FilesType } from "../index.js";
+import type { FilesType } from "../index.js";
 
 const client = strapi({
   baseURL: `${ENV.strapi.host}/api`,
@@ -10,13 +10,19 @@ const client = strapi({
 type AdressesType = {
   data: {
     documentId: string;
-    adress: string;
+    Address: string;
   }[];
 };
 
 const strapiModels = {
   filial: {
-    endpoint: "/bakery-filials",
+    endpoint: "/filialies",
+    model: "filialies",
+  },
+
+  marks: {
+    endpoint: "/otzyvies",
+    model: "otzyvies",
   },
 };
 
@@ -33,13 +39,53 @@ export const fetchAdresses = async (): Promise<AdressesType> => {
   }
 };
 
+type FetchMediaResponseType = {
+  data: {
+    Media?: {
+      url: string;
+    }[];
+  };
+};
+
+export const fetchDocumentMedia = async (
+  documentID: string,
+): Promise<string[]> => {
+  try {
+    const res = (await (
+      await client.fetch(
+        `/${strapiModels.marks.model}/${documentID}?populate=*`,
+      )
+    ).json()) as FetchMediaResponseType;
+
+    // const media = res.data.media_files;
+
+    if (!res.data.Media) {
+      return [];
+    }
+
+    const mediaURLs = res.data.Media.map(
+      (file, index) => `[Файл ${index + 1}](${ENV.strapi.host}${file.url})`,
+    );
+
+    return mediaURLs;
+  } catch (e) {
+    console.log(e);
+
+    throw Error("Error request");
+  }
+};
+
 export const uploadReview = async (data: {
   filial: string;
+  userName: string;
+  publickName: string;
   content: string;
   mark: number;
   pendingGroupId: string;
   files: FilesType;
-}): Promise<void> => {
+}): Promise<string> => {
+  let documentId = "";
+
   try {
     const fileIds: number[] = [];
     await Promise.all(
@@ -62,15 +108,21 @@ export const uploadReview = async (data: {
         fileIds.push(res[0].id);
       }),
     );
-    await client.collection("marks").create({
-      mark: data.mark,
-      media_files: fileIds,
-      content: data.content,
-      filial: data.filial,
-    });
+    documentId = (
+      await client.collection(strapiModels.marks.model).create({
+        Mark: data.mark,
+        Branche: data.filial,
+        Content: data.content,
+        Media: fileIds,
+        FIO: data.publickName,
+        Username: data.userName,
+      })
+    ).data.documentId;
   } catch (e) {
     console.log(e);
 
     throw Error("Error request");
   }
+
+  return documentId;
 };

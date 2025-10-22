@@ -9,6 +9,7 @@ import type { IncomingMessageType } from "@informerus/validators";
 import { singleton, tryCatchAsync } from "@informerus/utils";
 
 import { bot, botInfo, trpc } from "./clients.js";
+import { sanitizeMarkdown } from "telegram-markdown-sanitizer";
 
 const MAX_MESSAGE_LENGTH = 4096 - 200;
 
@@ -90,10 +91,16 @@ export class TopicMessage {
   private async sendMessage() {
     const user = await this.user;
     const selectedTopic = (await this.selectedTopic)!;
+    console.log(sanitizeMarkdown(this.messageShortened));
 
-    await bot.telegram.sendMessage(user.chatId, this.messageShortened, {
-      message_thread_id: selectedTopic.telegramId,
-    });
+    await bot.telegram.sendMessage(
+      user.chatId,
+      sanitizeMarkdown(this.messageShortened),
+      {
+        message_thread_id: selectedTopic.telegramId,
+        parse_mode: "MarkdownV2",
+      },
+    );
   }
 
   private getErrorType(err: TelegramError) {
