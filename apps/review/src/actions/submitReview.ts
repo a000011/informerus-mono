@@ -28,6 +28,6 @@ export const submitReview = async (data: {
   await trpc.messages.send.mutate({
     body: notifyContent,
     token: ENV.review.senderGroupToken,
-    topic: "testTopic",
+    topic: "Отзывы",
   });
 };

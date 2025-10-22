@@ -13,6 +13,10 @@ x-environment-vars: &environment-vars
   - SENDER_TOKEN=${SENDER_TOKEN}
   - TALKER_REST_EXAMPLE_URL=${TALKER_REST_EXAMPLE_URL}
   - TALKER_TOKEN=${TALKER_TOKEN}
+  - REVIEW_TOKEN=${REVIEW_TOKEN}
+  - SENDER_GROUP_TOKEN=${SENDER_GROUP_TOKEN}
+  - STRAPI_HOST=${STRAPI_HOST}
+  - STRAPI_TOKEN=${STRAPI_TOKEN}
 
 services:
   informer-api:
@@ -56,3 +60,12 @@ services:
     environment: *environment-vars
     pull_policy: build
     entrypoint: pnpm -C ./apps/talker dev
+  review_bot:
+    build:
+      dockerfile: Dockerfile
+    depends_on:
+      informer-api:
+        condition: service_healthy
+    environment: *environment-vars
+    pull_policy: build
+    entrypoint: pnpm -C ./apps/review dev
