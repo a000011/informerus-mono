@@ -49,7 +49,11 @@ type FetchMediaResponseType = {
 
 export const fetchDocumentMedia = async (
   documentID: string,
-): Promise<string[]> => {
+): Promise<
+  {
+    url: string;
+  }[]
+> => {
   try {
     const res = (await (
       await client.fetch(
@@ -63,11 +67,7 @@ export const fetchDocumentMedia = async (
       return [];
     }
 
-    const mediaURLs = res.data.Media.map(
-      (file, index) => `[Файл ${index + 1}](${ENV.strapi.host}${file.url})`,
-    );
-
-    return mediaURLs;
+    return res.data.Media;
   } catch (e) {
     console.log(e);
 
