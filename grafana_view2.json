@@ -1,0 +1,406 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 2,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "New link",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "ff1xx1iwyscg0e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "filial"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 300
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mark"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 91
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "content"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 358
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "publickName"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 229
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "userName"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 236
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "dataset": "grafana",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ff1xx1iwyscg0e"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  id,\r\n  filial,\r\n  mark,\r\n  content,\r\n  \"publickName\",\r\n  \"userName\",\r\n  created_at\r\nFROM\r\n  reviewt_db\r\nWHERE id = ${reviewId}\r\n\r\nLIMIT\r\n  50",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "id",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "filial",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "aba8a88a-0123-4456-b89a-b19a17a84e1b",
+                  "properties": {
+                    "field": "id",
+                    "fieldSrc": "field",
+                    "operator": "equal",
+                    "value": [1],
+                    "valueError": [null],
+                    "valueSrc": ["value"],
+                    "valueType": ["number"]
+                  },
+                  "type": "rule"
+                }
+              ],
+              "id": "aa8b8bb9-0123-4456-b89a-b19a153bddaf",
+              "type": "group"
+            },
+            "whereString": "id = 1"
+          },
+          "table": "reviewt_db"
+        }
+      ],
+      "title": "Новая панель",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "uid": "ff1xx1iwyscg0e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 4
+      },
+      "id": 2,
+      "options": {
+        "SVGBaseFix": true,
+        "add100Percentage": true,
+        "calcsMutation": "standard",
+        "centerAlignContent": true,
+        "codeData": "",
+        "css": "",
+        "dynamicData": true,
+        "dynamicFieldDisplayValues": true,
+        "dynamicHtmlGraphics": false,
+        "dynamicProps": true,
+        "html": "<div style=\"text-align: center;\">\n  <div class=\"box\" id=\"htmlgraphics-text\"></div>\n\n</div>\n",
+        "onInit": "",
+        "onInitOnResize": false,
+        "onRender": "// Sets the value from the first series on every refresh\nconst htmlgraphicsValue = htmlNode.getElementById('htmlgraphics-text');\nconst media = htmlGraphics.locationService.getLocation().search\nconst urlParams = new URLSearchParams(window.location.search);\n\n// Получаем значение параметра var-media\nconst mediaParam = urlParams.get('var-media');\nif(mediaParam !==''){\n  let result= ''\n  result = JSON.parse(mediaParam);\nhtmlgraphicsValue.textContent  = result\n\nif(mediaParam !== ''){\n  result = result.map((url, index) => {\n    return `<a href=\"http://dimarodin.duckdns.org:13377${url}\">Файл №${index + 1} (${url})</a><br>`\n  })\n\n}\n\nhtmlgraphicsValue.innerHTML  = result.join('')\n}\n\n",
+        "overflow": "visible",
+        "panelupdateOnMount": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull",
+            "last",
+            "firstNotNull",
+            "first",
+            "min",
+            "max",
+            "mean",
+            "sum",
+            "count",
+            "range",
+            "delta",
+            "step",
+            "diff",
+            "logmin",
+            "allIsZero",
+            "allIsNull",
+            "diffperc"
+          ]
+        },
+        "renderOnMount": true,
+        "rootCSS": "",
+        "useGrafanaScrollbar": true
+      },
+      "pluginVersion": "2.2.1",
+      "targets": [
+        {
+          "dataset": "grafana",
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  media\r\nFROM\r\n  reviewt_db\r\nWHERE\r\n  id = ${reviewId}\r\nLIMIT\r\n  50",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "media",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "aa98bbaa-cdef-4012-b456-719a17da53e7",
+                  "properties": {
+                    "field": "id",
+                    "fieldSrc": "field",
+                    "operator": "equal",
+                    "value": [1],
+                    "valueError": [null],
+                    "valueSrc": ["value"],
+                    "valueType": ["number"]
+                  },
+                  "type": "rule"
+                }
+              ],
+              "id": "98abbaba-0123-4456-b89a-b19a17da1192",
+              "type": "group"
+            },
+            "whereString": "id = 1"
+          },
+          "table": "reviewt_db"
+        }
+      ],
+      "title": "Медиа",
+      "type": "gapit-htmlgraphics-panel"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "11",
+          "value": "11"
+        },
+        "name": "reviewId",
+        "options": [
+          {
+            "selected": true,
+            "text": "11",
+            "value": "11"
+          }
+        ],
+        "query": "11",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "[\"/uploads/blob_07d44970d1.png\",\"/uploads/blob_ce5036cc2a.mp4\"]",
+          "value": "[\"/uploads/blob_07d44970d1.png\",\"/uploads/blob_ce5036cc2a.mp4\"]"
+        },
+        "definition": "",
+        "name": "media",
+        "options": [],
+        "query": "",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Оценка",
+  "uid": "adhcs8q",
+  "version": 24
+}
