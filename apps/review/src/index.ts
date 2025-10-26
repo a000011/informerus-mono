@@ -67,7 +67,35 @@ bot.start(async (ctx) => {
   ctx.session.publickName = `${ctx.message.from.first_name} ${ctx.message.from.last_name}`;
 
   await ctx.reply(
-    "Выберите филиал:",
+    "Здравствуйте!\n" +
+      "Мы очень рады, что вы заглянули в\n" +
+      '“Лавку N1" Поделитесь впечатлением\n' +
+      "о визите — это займёт всего минуту.\n" +
+      "Выберите филиал, где вы были 👇",
+    Markup.inlineKeyboard(
+      adresses.map((adr) =>
+        Markup.button.callback(adr.Address, `adr_${adr.documentId}`),
+      ),
+      {
+        columns: 1,
+      },
+    ),
+  );
+});
+
+bot.action("newStart", async (ctx) => {
+  await ctx.answerCbQuery();
+  ctx.session.userName = ctx.from.username ?? "";
+  ctx.session.publickName = `${ctx.from.first_name} ${ctx.from.last_name}`;
+
+  const adresses = (await fetchAdresses()).data;
+
+  await ctx.reply(
+    "Здравствуйте!\n" +
+      "Мы очень рады, что вы заглянули в\n" +
+      '“Лавку N1" Поделитесь впечатлением\n' +
+      "о визите — это займёт всего минуту.\n" +
+      "Выберите филиал, где вы были 👇",
     Markup.inlineKeyboard(
       adresses.map((adr) =>
         Markup.button.callback(adr.Address, `adr_${adr.documentId}`),
@@ -104,7 +132,6 @@ bot.action(predicateFn, async (ctx) => {
     }
 
     await ctx.editMessageText(adress.Address);
-
     ctx.session.filial = adress.Address;
 
     await ctx.reply(
@@ -128,7 +155,11 @@ marks.forEach((mark, index) => {
 
     await ctx.editMessageText(`⭐️${mark}`);
 
-    await ctx.reply("Напишите ваш отзыв");
+    await ctx.reply(
+      "Благодарим за вашу оценку\n" +
+        "Напишите, пожалуйста, что вам\n" +
+        "понравилось, а что нужно доработать?",
+    );
   });
 });
 
@@ -136,7 +167,7 @@ bot.on("text", async (ctx) => {
   if (ctx.session.mark !== 0 && ctx.session.content === "") {
     ctx.session.content = ctx.message.text;
     await ctx.reply(
-      "Если хотите можете, можете поделится фото/видео",
+      "Хотите добавить фото или видео блюда?",
       Markup.inlineKeyboard([
         Markup.button.callback(`Пропустить`, `finishReview`),
       ]),
@@ -163,19 +194,20 @@ bot.action(["finishReview", "submitPhoto"], async (ctx) => {
     "Благодарим вас за отзыв!\n" +
       "Ваша обратная связь поможет нам стать еще лучше!\n" +
       "С любовью, Ваша Лавка №1",
+    Markup.inlineKeyboard([
+      Markup.button.callback(`Отправить отзыв заново`, "newStart"),
+    ]),
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  submitReview(ctx.session);
-  ctx.session = {
-    userName: "",
-    publickName: "",
-    pendingGroupId: "",
-    content: "",
-    filial: "",
-    mark: 0,
-    files: [],
-  };
+  void (async () => {
+    await submitReview(ctx.session);
+
+    ctx.session.pendingGroupId = "";
+    ctx.session.content = "";
+    ctx.session.filial = "";
+    ctx.session.mark = 0;
+    ctx.session.files = [];
+  })();
 });
 
 process.once("SIGINT", () => bot.stop("SIGINT"));

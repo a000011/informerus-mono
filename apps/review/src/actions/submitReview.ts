@@ -47,9 +47,9 @@ export const submitReview = async (data: {
     media: JSON.stringify(media.map((url) => `${ENV.strapi.host}${url.url}`)),
   }).save();
 
-  // await trpc.messages.send.mutate({
-  //   body: notifyContent,
-  //   token: ENV.review.senderGroupToken,
-  //   topic: "Отзывы",
-  // });
+  await trpc.messages.send.mutate({
+    body: notifyContent,
+    token: ENV.review.senderGroupToken,
+    topic: "Отзывы",
+  });
 };
