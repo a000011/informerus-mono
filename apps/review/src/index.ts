@@ -54,11 +54,11 @@ addMediaActions(bot);
 
 bot.catch(async (err, ctx) => {
   console.error(`Ошибка для пользователя ${ctx.from?.id}:`, err);
-  await trpc.messages.send.mutate({
-    body: (err as Error).message,
-    token: ENV.review.senderGroupToken,
-    topic: "Ошибки",
-  });
+  // await trpc.messages.send.mutate({
+  //   body: (err as Error).message,
+  //   token: ENV.review.senderGroupToken,
+  //   topic: "Ошибки",
+  // });
 });
 
 bot.start(async (ctx) => {
@@ -190,14 +190,27 @@ bot.action(["finishReview", "submitPhoto"], async (ctx) => {
 
   await ctx.answerCbQuery();
 
-  await ctx.reply(
-    "Благодарим вас за отзыв!\n" +
-      "Ваша обратная связь поможет нам стать еще лучше!\n" +
-      "С любовью, Ваша Лавка №1",
-    Markup.inlineKeyboard([
-      Markup.button.callback(`Отправить отзыв заново`, "newStart"),
-    ]),
-  );
+  if (ctx.session.mark < 3) {
+    await ctx.reply(
+      "Ваш отзыв передан в службу\n" +
+        "поддержки, в ближайшее время с вами\n" +
+        "свяжется наш сотрудник для решения\n" +
+        "сложившейся ситуации. Пожалуйста,\n" +
+        "ожидайте.",
+      Markup.inlineKeyboard([
+        Markup.button.callback(`Отправить отзыв заново`, "newStart"),
+      ]),
+    );
+  } else {
+    await ctx.reply(
+      "Благодарим вас за отзыв!\n" +
+        "Ваша обратная связь поможет нам стать еще лучше!\n" +
+        "С любовью, Ваша Лавка №1",
+      Markup.inlineKeyboard([
+        Markup.button.callback(`Отправить отзыв заново`, "newStart"),
+      ]),
+    );
+  }
 
   void (async () => {
     await submitReview(ctx.session);
