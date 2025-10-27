@@ -54,6 +54,15 @@ addMediaActions(bot);
 
 bot.catch(async (err, ctx) => {
   console.error(`Ошибка для пользователя ${ctx.from?.id}:`, err);
+  ctx.session = {
+    userName: "",
+    publickName: "",
+    pendingGroupId: "",
+    content: "",
+    filial: "",
+    mark: 0,
+    files: [],
+  };
   // await trpc.messages.send.mutate({
   //   body: (err as Error).message,
   //   token: ENV.review.senderGroupToken,
@@ -167,7 +176,7 @@ bot.on("text", async (ctx) => {
   if (ctx.session.mark !== 0 && ctx.session.content === "") {
     ctx.session.content = ctx.message.text;
     await ctx.reply(
-      "Хотите добавить фото или видео блюда?",
+      "Если хотите можете, можете поделится фото/видео",
       Markup.inlineKeyboard([
         Markup.button.callback(`Пропустить`, `finishReview`),
       ]),
@@ -186,7 +195,8 @@ bot.action("cancelPhoto", async (ctx) => {
 });
 
 bot.action(["finishReview", "submitPhoto"], async (ctx) => {
-  await ctx.editMessageText("Если хотите можете, можете поделится фото/видео");
+  // await ctx.editMessageText("Если хотите можете, можете поделится фото/видео");
+  await ctx.deleteMessage();
 
   await ctx.answerCbQuery();
 
