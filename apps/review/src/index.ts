@@ -8,6 +8,8 @@ import { addMediaActions } from "./actions/media.js";
 import { submitReview } from "./actions/submitReview.js";
 import { createInformerClient } from "@informerus/trpc-client";
 
+//TODO сдлеать обработку меди с текстом
+
 export type FilesType = {
   id: string;
   format: "image" | "video";
@@ -75,12 +77,16 @@ bot.start(async (ctx) => {
   ctx.session.userName = ctx.message.from.username ?? "";
   ctx.session.publickName = `${ctx.message.from.first_name} ${ctx.message.from.last_name}`;
 
+  const text =
+    " Здравствуйте!\n\n" +
+    "Мы очень рады, что вы заглянули в\n" +
+    "«Лавку №1» ☺️!\n\n" +
+    "Поделитесь вашим впечатлением\n" +
+    "о визите, это займёт всего минуту.\n\n" +
+    "Выберите адрес ресторана, в котором вы были";
+
   await ctx.reply(
-    "Здравствуйте!\n" +
-      "Мы очень рады, что вы заглянули в\n" +
-      '“Лавку N1" Поделитесь впечатлением\n' +
-      "о визите — это займёт всего минуту.\n" +
-      "Выберите филиал, где вы были 👇",
+    text,
     Markup.inlineKeyboard(
       adresses.map((adr) =>
         Markup.button.callback(adr.Address, `adr_${adr.documentId}`),
@@ -144,7 +150,7 @@ bot.action(predicateFn, async (ctx) => {
     ctx.session.filial = adress.Address;
 
     await ctx.reply(
-      "Отлично! Теперь оцените, как всё прошло ⭐️",
+      "Отлично!\nКак бы вы оценили свой визит по 5-балльной шкале⭐️? Мы все поймем по звёздам 🤩",
       Markup.inlineKeyboard(
         marks.map((mark, index) =>
           Markup.button.callback(`⭐️${mark}`, `mark${index}`),
@@ -176,6 +182,11 @@ bot.on("text", async (ctx) => {
   if (ctx.session.mark !== 0 && ctx.session.content === "") {
     ctx.session.content = ctx.message.text;
     await ctx.reply(
+      " Спасибо, что поделились с нами впечатлениями 💛!\n\n" +
+        "Благодаря вам мы становимся ещё лучше каждый день!\n\n" +
+        "С любовью, Ваша Лавка №1",
+    );
+    await ctx.reply(
       "Если хотите можете, можете поделится фото/видео",
       Markup.inlineKeyboard([
         Markup.button.callback(`Пропустить`, `finishReview`),
@@ -200,27 +211,32 @@ bot.action(["finishReview", "submitPhoto"], async (ctx) => {
 
   await ctx.answerCbQuery();
 
+  let text =
+    "Благодарим вас за отзыв!\n" +
+    "Ваша обратная связь поможет нам стать еще лучше!\n" +
+    "С любовью, Ваша Лавка №1";
+
   if (ctx.session.mark < 3) {
-    await ctx.reply(
-      "Ваш отзыв передан в службу\n" +
-        "поддержки, в ближайшее время с вами\n" +
-        "свяжется наш сотрудник для решения\n" +
-        "сложившейся ситуации. Пожалуйста,\n" +
-        "ожидайте.",
-      Markup.inlineKeyboard([
-        Markup.button.callback(`Отправить отзыв заново`, "newStart"),
-      ]),
-    );
-  } else {
-    await ctx.reply(
-      "Благодарим вас за отзыв!\n" +
-        "Ваша обратная связь поможет нам стать еще лучше!\n" +
-        "С любовью, Ваша Лавка №1",
-      Markup.inlineKeyboard([
-        Markup.button.callback(`Отправить отзыв заново`, "newStart"),
-      ]),
-    );
+    text =
+      "Спасибо за ваше сообщение! 💬\n\n" +
+      "Мы уже передали информацию в службу поддержки.\n\n" +
+      "В ближайшее время с вами свяжется наш специалист, чтобы помочь разобраться в ситуации 🙏🏻\n\n" +
+      "Пожалуйста, ожидайте!\n" +
+      "С заботой , Лавка №1";
   }
+  if (ctx.session.mark > 3) {
+    text =
+      "Спасибо, что поделились с нами впечатлениями 💛!\n\n" +
+      "Благодаря вам мы становимся ещё лучше каждый день!\n\n" +
+      "С любовью, Ваша Лавка №1\n\n";
+  }
+
+  await ctx.reply(
+    text,
+    Markup.inlineKeyboard([
+      Markup.button.callback(`Отправить отзыв заново`, "newStart"),
+    ]),
+  );
 
   void (async () => {
     await submitReview(ctx.session);
