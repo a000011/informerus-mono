@@ -7,6 +7,25 @@ import { fetchAdresses } from "./strapi/index.js";
 import { addMediaActions } from "./actions/media.js";
 import { submitReview } from "./actions/submitReview.js";
 import { createInformerClient } from "@informerus/trpc-client";
+import { Postgres } from "@telegraf/session/pg";
+
+const store = Postgres<{
+  session: {
+    filial: string;
+    userName: string;
+    publickName: string;
+    content: string;
+    mark: number;
+    pendingGroupId: string;
+    files: FilesType;
+  };
+}>({
+  host: ENV.postgres.host,
+  port: ENV.postgres.port,
+  database: "telegraf",
+  user: ENV.postgres.username,
+  password: ENV.postgres.password,
+});
 
 //TODO сдлеать обработку меди с текстом
 
@@ -39,6 +58,7 @@ export type BotType = typeof bot;
 
 bot.use(
   session({
+    store: store,
     defaultSession: () => ({
       userName: "",
       publickName: "",
@@ -75,7 +95,7 @@ bot.catch(async (err, ctx) => {
 bot.start(async (ctx) => {
   const adresses = (await fetchAdresses()).data;
   ctx.session.userName = ctx.message.from.username ?? "";
-  ctx.session.publickName = `${ctx.message.from.first_name} ${ctx.message.from.last_name}`;
+  ctx.session.publickName = `${ctx.message.from.first_name} ${ctx.message.from.last_name ?? ""}`;
 
   const text =
     " Здравствуйте!\n\n" +
@@ -237,15 +257,17 @@ bot.action(["finishReview", "submitPhoto"], async (ctx) => {
     ]),
   );
 
-  void (async () => {
-    await submitReview(ctx.session);
+  const data = { ...ctx.session };
 
-    ctx.session.pendingGroupId = "";
-    ctx.session.content = "";
-    ctx.session.filial = "";
-    ctx.session.mark = 0;
-    ctx.session.files = [];
+  void (async () => {
+    await submitReview(data);
   })();
+
+  ctx.session.pendingGroupId = "";
+  ctx.session.content = "";
+  ctx.session.filial = "";
+  ctx.session.mark = 0;
+  ctx.session.files = [];
 });
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
