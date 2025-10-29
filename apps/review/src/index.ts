@@ -181,13 +181,13 @@ marks.forEach((mark, index) => {
 bot.on("text", async (ctx) => {
   if (ctx.session.mark !== 0 && ctx.session.content === "") {
     ctx.session.content = ctx.message.text;
+    // await ctx.reply(
+    //   " Спасибо, что поделились с нами впечатлениями 💛!\n\n" +
+    //     "Благодаря вам мы становимся ещё лучше каждый день!\n\n" +
+    //     "С любовью, Ваша Лавка №1",
+    // );
     await ctx.reply(
-      " Спасибо, что поделились с нами впечатлениями 💛!\n\n" +
-        "Благодаря вам мы становимся ещё лучше каждый день!\n\n" +
-        "С любовью, Ваша Лавка №1",
-    );
-    await ctx.reply(
-      "Если хотите можете, можете поделится фото/видео",
+      "При желании можете поделиться фото или видео 📸",
       Markup.inlineKeyboard([
         Markup.button.callback(`Пропустить`, `finishReview`),
       ]),
@@ -198,7 +198,7 @@ bot.on("text", async (ctx) => {
 bot.action("cancelPhoto", async (ctx) => {
   ctx.session.files = [];
   await ctx.reply(
-    "Если хотите можете, можете поделится фото/видео",
+    "При желании можете поделиться фото или видео 📸",
     Markup.inlineKeyboard([
       Markup.button.callback(`Пропустить`, `finishReview`),
     ]),
