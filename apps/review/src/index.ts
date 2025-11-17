@@ -253,7 +253,7 @@ bot.action(["finishReview", "submitPhoto"], async (ctx) => {
   await ctx.reply(
     text,
     Markup.inlineKeyboard([
-      Markup.button.callback(`Отправить отзыв заново`, "newStart"),
+      Markup.button.callback(`Оставить новый отзыв`, "newStart"),
     ]),
   );
 
