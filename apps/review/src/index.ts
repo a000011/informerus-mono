@@ -5,9 +5,9 @@ import { ENV } from "@informerus/validators";
 import type { Update } from "telegraf/types";
 import { fetchAdresses } from "./strapi/index.js";
 import { addMediaActions } from "./actions/media.js";
-import { submitReview } from "./actions/submitReview.js";
 import { createInformerClient } from "@informerus/trpc-client";
 import { Postgres } from "@telegraf/session/pg";
+import { finishCollback } from "./actions/finish.js";
 
 const store = Postgres<{
   session: {
@@ -41,6 +41,7 @@ export type MyContext<U extends Update = Update> = {
   session: {
     filial: string;
     userName: string;
+    phoneNumber: string;
     publickName: string;
     content: string;
     mark: number;
@@ -58,10 +59,12 @@ export type BotType = typeof bot;
 
 bot.use(
   session({
+    //@ts-expect-error type mismatch
     store: store,
     defaultSession: () => ({
       userName: "",
       publickName: "",
+      phoneNumber: "",
       pendingGroupId: "",
       content: "",
       filial: "",
@@ -78,6 +81,7 @@ bot.catch(async (err, ctx) => {
   console.error(`Ошибка для пользователя ${ctx.from?.id}:`, err);
   ctx.session = {
     userName: "",
+    phoneNumber: "",
     publickName: "",
     pendingGroupId: "",
     content: "",
@@ -92,7 +96,17 @@ bot.catch(async (err, ctx) => {
   // });
 });
 
+export const clearCtx = (ctx: MyContext) => {
+  ctx.session.pendingGroupId = "";
+  ctx.session.content = "";
+  ctx.session.filial = "";
+  ctx.session.mark = 0;
+  ctx.session.files = [];
+  ctx.session.phoneNumber = "";
+};
+
 bot.start(async (ctx) => {
+  clearCtx(ctx);
   const adresses = (await fetchAdresses()).data;
   ctx.session.userName = ctx.message.from.username ?? "";
   ctx.session.publickName = `${ctx.message.from.first_name} ${ctx.message.from.last_name ?? ""}`;
@@ -208,7 +222,7 @@ bot.on("text", async (ctx) => {
     await ctx.reply(
       "При желании можете поделиться фото или видео 📸",
       Markup.inlineKeyboard([
-        Markup.button.callback(`Пропустить`, `finishReview`),
+        Markup.button.callback(`Пропустить`, `answerContact`),
       ]),
     );
   }
@@ -219,55 +233,61 @@ bot.action("cancelPhoto", async (ctx) => {
   await ctx.reply(
     "При желании можете поделиться фото или видео 📸",
     Markup.inlineKeyboard([
-      Markup.button.callback(`Пропустить`, `finishReview`),
+      Markup.button.callback(`Пропустить`, `answerContact`),
     ]),
   );
 });
 
-bot.action(["finishReview", "submitPhoto"], async (ctx) => {
-  // await ctx.editMessageText("Если хотите можете, можете поделится фото/видео");
+const cancelPhotoText = "Не отправлять";
+
+bot.action("answerContact", async (ctx) => {
+  await ctx.answerCbQuery();
   await ctx.deleteMessage();
 
-  await ctx.answerCbQuery();
-
-  let text =
-    "Благодарим вас за отзыв!\n" +
-    "Ваша обратная связь поможет нам стать еще лучше!\n" +
-    "С любовью, ваша Лавка №1";
-
-  if (ctx.session.mark < 4) {
-    text =
-      "Спасибо за ваше обращение! 💬\n\n" +
-      "Мы уже передали информацию в службу поддержки.\n\n" +
-      "В ближайшее время с вами свяжется наш специалист, чтобы помочь разобраться в ситуации 🙏🏻\n\n" +
-      "Пожалуйста, ожидайте!\n" +
-      "С заботой, ваша Лавка №1";
-  }
-  if (ctx.session.mark > 3) {
-    text =
-      "Спасибо, что поделились с нами впечатлениями 💛!\n\n" +
-      "Благодаря вам мы становимся ещё лучше каждый день!\n\n" +
-      "С любовью, ваша Лавка №1";
-  }
+  const keyboard = Markup.keyboard([
+    Markup.button.contactRequest("📱 Поделиться телефоном"),
+  ])
+    .oneTime()
+    .resize();
 
   await ctx.reply(
-    text,
+    "Оставьте нам свой номер телефона для обратной связи 📱",
+    keyboard,
+  );
+  await ctx.reply(
+    `Если не хотите - нажмите «${cancelPhotoText}»`,
     Markup.inlineKeyboard([
-      Markup.button.callback(`Оставить новый отзыв`, "newStart"),
+      Markup.button.callback(cancelPhotoText, `cancelContact`),
     ]),
   );
+});
 
-  const data = { ...ctx.session };
+bot.on("contact", async (ctx) => {
+  try {
+    const contact = ctx.message.contact;
 
-  void (async () => {
-    await submitReview(data);
-  })();
+    if (contact.user_id === ctx.from.id) {
+      ctx.session.phoneNumber = contact.phone_number;
+    }
+  } catch (e) {
+    console.log("ошибка при отправке котакта");
+  }
 
-  ctx.session.pendingGroupId = "";
-  ctx.session.content = "";
-  ctx.session.filial = "";
-  ctx.session.mark = 0;
-  ctx.session.files = [];
+  await finishCollback(ctx);
+});
+
+bot.action(["cancelContact"], async (ctx) => {
+  await ctx.deleteMessage();
+  await ctx.reply("👌", Markup.removeKeyboard());
+
+  await finishCollback(ctx);
+});
+
+bot.action(["finishReview"], async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.deleteMessage();
+
+  await finishCollback(ctx);
 });
 
 process.once("SIGINT", () => bot.stop("SIGINT"));

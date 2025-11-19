@@ -6,7 +6,7 @@ const sendQuestion = async (ctx: MyContext) => {
   await ctx.reply(
     "Отправить эти фото/видео?",
     Markup.inlineKeyboard([
-      Markup.button.callback(`подтвердить`, `submitPhoto`),
+      Markup.button.callback(`подтвердить`, `answerContact`),
       Markup.button.callback(`отмена`, `cancelPhoto`),
     ]),
   );

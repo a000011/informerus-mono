@@ -14,6 +14,9 @@ export class ReviewtDB extends BaseEntity {
   @Column()
   content: string;
 
+  @Column({ default: "" })
+  phone: string;
+
   @Column()
   publickName: string;
 

@@ -83,6 +83,7 @@ export const uploadReview = async (data: {
   mark: number;
   pendingGroupId: string;
   files: FilesType;
+  phoneNumber: string;
 }): Promise<string> => {
   let documentId = "";
 
@@ -104,7 +105,7 @@ export const uploadReview = async (data: {
         const res = await client.files.upload(blob, {
           fileInfo: { alternativeText: "An example image" },
         });
-        //@ts-ignore asd
+        //@ts-expect-error asd
         fileIds.push(res[0].id);
       }),
     );
@@ -115,6 +116,7 @@ export const uploadReview = async (data: {
         Content: data.content,
         Media: fileIds,
         FIO: data.publickName,
+        Phone: data.phoneNumber,
         Username: data.userName,
       })
     ).data.documentId;
